@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    ports:
+      - '${ZOOKEEPER_SERVICE_PORT}:${ZOOKEEPER_SERVICE_PORT}'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  kafka:
+    image: 'bitnami/kafka:latest'
+    ports:
+      - '${KAFKA_SERVICE_PORT}:${KAFKA_SERVICE_PORT}'
+    environment:
+      - KAFKA_LISTENERS=PLAINTEXT://:${KAFKA_SERVICE_PORT}
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:${KAFKA_SERVICE_PORT}
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:${ZOOKEEPER_SERVICE_PORT}
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
